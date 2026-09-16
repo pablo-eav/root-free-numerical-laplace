@@ -1,5 +1,5 @@
 % ROOT_FREE_LAPLACE Root-Free Numerical Laplace Inversion Toolbox
-% Version 1.0.0 (Release 2026) 10-Sep-2026
+% Version 1.0.1 (Release 2026) 16-Sep-2026
 %
 % High-Order Spectral and Orthogonal Numerical Laplace Inversion
 % Supporting Degrees from K = 1 to K = 1,000,000 strictly without root-finding.
