@@ -208,8 +208,8 @@ function LaplaceGUI()
                 z_max_edit.String = '1e-6';
                 engine_popup.Value = 1;
             case 6 % Difusión Térmica (EDP de Calor)
-                num_edit.String = 'prod(((2*(1:80)-1).^2)*(pi^2)/4 .^ (1/80))^80';
-                den_edit.String = 'laplace.FactorPoly([0, -((2*(1:80)-1).^2)*(pi^2)/4])';
+                num_edit.String = 'prod((((2*(1:40)-1).^2)*(pi^2)/4) .^ (1/40))^40';
+                den_edit.String = 'laplace.FactorPoly([0, -((2*(1:40)-1).^2)*(pi^2)/4])';
                 z_min_edit.String = '1e-4';
                 z_max_edit.String = '2.5';
                 engine_popup.Value = 4; % TaylorAdaptive
@@ -255,7 +255,7 @@ function LaplaceGUI()
                 case 4, eng_choice = 'TaylorAdaptive';
             end
 
-            opts = struct('engine', eng_choice);
+            opts = struct('engine', eng_choice, 'tol', 1e-4);
 
             t_start = tic;
             [f_inv, info] = laplace.invert(num_obj, den_obj, z_grid, opts);
