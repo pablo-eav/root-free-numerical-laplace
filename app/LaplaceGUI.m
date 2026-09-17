@@ -227,6 +227,7 @@ function LaplaceGUI()
             if startsWith(den_str, 'FactorPoly') || startsWith(den_str, 'PartialFractions')
                 den_str = ['laplace.' den_str];
             end
+            den_str = strrep(den_str, '[0;', '[0,');
             den_obj = eval(den_str);
 
             % Evaluate Numerator
