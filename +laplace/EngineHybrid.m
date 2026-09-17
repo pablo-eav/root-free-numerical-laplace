@@ -81,29 +81,31 @@ classdef EngineHybrid
             
             rel_deg = max(1, deg_sys - deg_a);
             
-            choice_str = lower(char(engine_choice));
-            
-            if ~isempty(strfind(choice_str, 'prolong')) || ~isempty(strfind(choice_str, 'taylor'))
+            if ~isempty(strfind(choice_str, 'levin'))
+                selected = 'levin';
+            elseif ~isempty(strfind(choice_str, 'prolong')) || ~isempty(strfind(choice_str, 'taylor'))
                 selected = 'taylor';
             elseif ~isempty(strfind(choice_str, 'stirling')) || ~isempty(strfind(choice_str, 'laurent'))
                 selected = 'stirling';
             elseif ~isempty(strfind(choice_str, 'laguerre'))
                 selected = 'laguerre';
             else
-                % AUTO SELECTION LOGIC
+                % AUTO SELECTION LOGIC (Root-Free Universal)
                 if isa(b_input, 'laplace.FactorPoly') && ~isempty(b_input.roots) && ...
                    isempty(b_input.quad_coeffs) && deg_a == 0 && all(abs(b_input.roots - b_input.roots(1)) < 1e-12)
                     % Pure cascade (s + a)^K where Laurent-Stirling is exact O(1)
                     selected = 'stirling';
+                elseif isnumeric(b_input) && (isnumeric(a_input) || isempty(a_input))
+                    % Canonical rational fractions A(s)/B(s): Root-Free Laurent + Levin AR(2)
+                    selected = 'levin';
                 else
-                    % For general rational fractions with arbitrary poles and zeros,
-                    % Möbius-Laguerre orthogonal engine is globally convergent on [0, inf)
-                    % and eliminates Taylor/Maclaurin polynomial cancellation.
                     selected = 'laguerre';
                 end
             end
             
             switch selected
+                case 'levin'
+                    [f_vals, info] = laplace.EngineLevin.invert(a_input, b_input, z_grid, options);
                 case 'stirling'
                     [f_vals, info] = laplace.EngineStirling.invert(a_input, b_input, z_grid, R_pole, min(max_terms, 250));
                     info.z_fuj = z_fuj;
@@ -112,7 +114,7 @@ classdef EngineHybrid
                 case 'taylor'
                     [f_vals, info] = laplace.EngineTaylorAdaptive.invert(a_input, b_input, z_grid, R_pole, max_terms, user_a, 12, tol);
                 otherwise
-                    [f_vals, info] = laplace.EngineLaguerre.invert(a_input, b_input, z_grid, R_pole, max_terms, user_a);
+                    [f_vals, info] = laplace.EngineLevin.invert(a_input, b_input, z_grid, options);
             end
         end
     end

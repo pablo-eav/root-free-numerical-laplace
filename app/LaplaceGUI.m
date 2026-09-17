@@ -41,11 +41,11 @@ function LaplaceGUI()
           
     preset_items = {
         '1. Oscilador Racional 2º Orden: 1 / (s^2 + 2s + 2)', ...
-        '2. Doble Polo Crítico (2º Orden): 1 / (s^2 + 4s + 4)', ...
+        '2. Doble Resonancia (Batimiento): s / ((s^2 + 1)(s^2 + 2.25))', ...
         '3. Fracción General con Ceros (Grado 4): (s + 3) / (s^4 + 6s^3 + 23s^2 + 34s + 26)', ...
         '4. Filtro Butterworth 6º Orden: 1 / (s^6 + 3.86s^5 + ... + 1)', ...
-        '5. Cascada Masiva de Polos Múltiples (K=100): 1 / (s + 1)^100', ...
-        '6. Difusión Térmica Trascendente (EDP de Calor)'
+        '5. Cascada de Alto Orden (K=100): 1 / (s + 0.5)^100', ...
+        '6. Resonador Polimodal Masivo (K=10,000): (s^9999 - 2*s^9998) / (s^10000 + 1)'
     };
     
     preset_popup = uicontrol('Parent', ctrl_panel, 'Style', 'popupmenu', ...
@@ -99,6 +99,7 @@ function LaplaceGUI()
               'Units', 'normalized', 'Position', [0.05, 0.44, 0.9, 0.03]);
     engine_items = {
         'Auto (Híbrido Inteligente - Recomendado)', ...
+        'Levin AR(2) (División Laurent Root-Free)', ...
         'Laurent-Stirling (Float64)', ...
         'Möbius-Laguerre (Float64)', ...
         'Prolongación Adaptativa Taylor-Laguerre'
@@ -183,11 +184,11 @@ function LaplaceGUI()
                 z_min_edit.String = '0.0';
                 z_max_edit.String = '10.0';
                 engine_popup.Value = 1;
-            case 2 % Doble polo crítico
-                num_edit.String = '1';
-                den_edit.String = '[1, 4, 4]';
+            case 2 % Doble Resonancia (Batimiento)
+                num_edit.String = '[1, 0]';
+                den_edit.String = '[1, 0, 3.25, 0, 2.25]';
                 z_min_edit.String = '0.0';
-                z_max_edit.String = '8.0';
+                z_max_edit.String = '25.0';
                 engine_popup.Value = 1;
             case 3 % Racional con ceros y polos (Grado 4)
                 num_edit.String = '[1, 3]';
@@ -201,18 +202,18 @@ function LaplaceGUI()
                 z_min_edit.String = '0.0';
                 z_max_edit.String = '15.0';
                 engine_popup.Value = 1;
-            case 5 % Cascada Masiva K=100
+            case 5 % Cascada Alto Orden K=100
                 num_edit.String = '1';
-                den_edit.String = 'laplace.FactorPoly(-ones(100,1))';
+                den_edit.String = 'laplace.FactorPoly(-0.5*ones(100,1))';
                 z_min_edit.String = '0.0';
-                z_max_edit.String = '150.0';
+                z_max_edit.String = '80.0';
                 engine_popup.Value = 1;
-            case 6 % Difusión Térmica Trascendente (EDP de Calor)
-                num_edit.String = 'prod((((2*(1:40)-1).^2)*(pi^2)/4) .^ (1/40))^40';
-                den_edit.String = 'laplace.FactorPoly([0, -((2*(1:40)-1).^2)*(pi^2)/4])';
-                z_min_edit.String = '1e-4';
-                z_max_edit.String = '2.5';
-                engine_popup.Value = 1; % Auto (Laguerre estable)
+            case 6 % Resonador Polimodal Masivo K = 10,000 (Sin cálculo de raíces)
+                num_edit.String = '[1, -2, zeros(1, 9998)]';
+                den_edit.String = '[1, zeros(1, 9999), 1]';
+                z_min_edit.String = '0.0';
+                z_max_edit.String = '5.0';
+                engine_popup.Value = 1;
         end
         on_invert_clicked();
     end
@@ -263,9 +264,10 @@ function LaplaceGUI()
             eng_val = engine_popup.Value;
             switch eng_val
                 case 1, eng_choice = 'Auto';
-                case 2, eng_choice = 'Stirling';
-                case 3, eng_choice = 'Laguerre';
-                case 4, eng_choice = 'TaylorAdaptive';
+                case 2, eng_choice = 'Levin';
+                case 3, eng_choice = 'Stirling';
+                case 4, eng_choice = 'Laguerre';
+                case 5, eng_choice = 'TaylorAdaptive';
             end
 
             opts = struct('engine', eng_choice, 'tol', 1e-4);
@@ -311,19 +313,19 @@ function LaplaceGUI()
                 semilogy(ax_err, z_grid, max(err, 1e-17), '-', 'Color', [0.85, 0.15, 0.15], 'LineWidth', 1.6);
                 title(ax_err, sprintf('Error Absoluto frente a Solución Exacta (Max: %.2e)', max(err)), 'FontSize', 10, 'FontWeight', 'bold', 'Color', [0.05, 0.05, 0.05]);
             elseif preset_popup.Value == 2
-                f_ref = z_grid .* exp(-2.0 * z_grid);
+                f_ref = 0.8 * (cos(z_grid) - cos(1.5 * z_grid));
                 hold(ax_main, 'on');
-                plot(ax_main, z_grid, f_ref, '--', 'Color', [0.85, 0.15, 0.15], 'LineWidth', 1.6, 'DisplayName', 'Exacto');
+                plot(ax_main, z_grid, f_ref, '--', 'Color', [0.85, 0.15, 0.15], 'LineWidth', 1.6, 'DisplayName', 'Exacto (Batimiento)');
                 err = abs(f_inv - f_ref);
                 semilogy(ax_err, z_grid, max(err, 1e-17), '-', 'Color', [0.85, 0.15, 0.15], 'LineWidth', 1.6);
                 title(ax_err, sprintf('Error Absoluto frente a Solución Exacta (Max: %.2e)', max(err)), 'FontSize', 10, 'FontWeight', 'bold', 'Color', [0.05, 0.05, 0.05]);
             elseif preset_popup.Value == 6
-                f_ref = laplace.eval_diffusion_step_exact(z_grid);
+                f_ref = 1.0 - 2.0 * z_grid;
                 hold(ax_main, 'on');
-                plot(ax_main, z_grid, f_ref, '--', 'Color', [0.85, 0.15, 0.15], 'LineWidth', 1.6, 'DisplayName', 'Exacto (Fourier/erfc)');
+                plot(ax_main, z_grid, f_ref, '--', 'Color', [0.85, 0.15, 0.15], 'LineWidth', 1.6, 'DisplayName', 'Exacto: f(z) = 1 - 2z');
                 err = abs(f_inv - f_ref);
                 semilogy(ax_err, z_grid, max(err, 1e-16), '-', 'Color', [0.85, 0.15, 0.15], 'LineWidth', 1.6);
-                title(ax_err, sprintf('Error frente a Solución Exacta de Difusión (Max: %.2e)', max(err)), 'FontSize', 10, 'FontWeight', 'bold', 'Color', [0.05, 0.05, 0.05]);
+                title(ax_err, sprintf('Error frente a Solución Exacta Polimodal K=10,000 (Max: %.2e)', max(err)), 'FontSize', 10, 'FontWeight', 'bold', 'Color', [0.05, 0.05, 0.05]);
             else
                 plot(ax_err, z_grid, abs(f_inv), '-', 'Color', [0.55, 0.1, 0.65], 'LineWidth', 1.6);
                 title(ax_err, 'Magnitud Absoluta |f(z)|', 'FontSize', 10, 'FontWeight', 'bold', 'Color', [0.05, 0.05, 0.05]);
