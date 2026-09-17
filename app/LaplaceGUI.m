@@ -206,7 +206,7 @@ function LaplaceGUI()
                 num_edit.String = '1';
                 den_edit.String = 'laplace.FactorPoly(-0.5*ones(100,1))';
                 z_min_edit.String = '0.0';
-                z_max_edit.String = '80.0';
+                z_max_edit.String = '35.0';
                 engine_popup.Value = 1;
             case 6 % Difusión Térmica Trascendente (Red Chebyshev K=10,000)
                 num_edit.String = '[]';
@@ -316,6 +316,38 @@ function LaplaceGUI()
                 f_ref = 0.8 * (cos(z_grid) - cos(1.5 * z_grid));
                 hold(ax_main, 'on');
                 plot(ax_main, z_grid, f_ref, '--', 'Color', [0.85, 0.15, 0.15], 'LineWidth', 1.6, 'DisplayName', 'Exacto (Batimiento)');
+                err = abs(f_inv - f_ref);
+                semilogy(ax_err, z_grid, max(err, 1e-17), '-', 'Color', [0.85, 0.15, 0.15], 'LineWidth', 1.6);
+                title(ax_err, sprintf('Error Absoluto frente a Solución Exacta (Max: %.2e)', max(err)), 'FontSize', 10, 'FontWeight', 'bold', 'Color', [0.05, 0.05, 0.05]);
+            elseif preset_popup.Value == 3
+                f_ref = (1/17) * exp(-z_grid) .* (cos(z_grid) + 4*sin(z_grid)) - ...
+                        (1/17) * exp(-2*z_grid) .* (cos(3*z_grid) + (5/3)*sin(3*z_grid));
+                hold(ax_main, 'on');
+                plot(ax_main, z_grid, f_ref, '--', 'Color', [0.85, 0.15, 0.15], 'LineWidth', 1.6, 'DisplayName', 'Exacto');
+                err = abs(f_inv - f_ref);
+                semilogy(ax_err, z_grid, max(err, 1e-17), '-', 'Color', [0.85, 0.15, 0.15], 'LineWidth', 1.6);
+                title(ax_err, sprintf('Error Absoluto frente a Solución Exacta (Max: %.2e)', max(err)), 'FontSize', 10, 'FontWeight', 'bold', 'Color', [0.05, 0.05, 0.05]);
+            elseif preset_popup.Value == 4
+                f_ref = laplace.eval_butterworth6_exact(z_grid);
+                hold(ax_main, 'on');
+                plot(ax_main, z_grid, f_ref, '--', 'Color', [0.85, 0.15, 0.15], 'LineWidth', 1.6, 'DisplayName', 'Exacto');
+                err = abs(f_inv - f_ref);
+                semilogy(ax_err, z_grid, max(err, 1e-17), '-', 'Color', [0.85, 0.15, 0.15], 'LineWidth', 1.6);
+                title(ax_err, sprintf('Error Absoluto frente a Solución Exacta (Max: %.2e)', max(err)), 'FontSize', 10, 'FontWeight', 'bold', 'Color', [0.05, 0.05, 0.05]);
+            elseif preset_popup.Value == 5
+                % Exact reference for 100-pole cascade: z^99 / 99! * exp(-0.5*z)
+                f_ref = zeros(size(z_grid));
+                for k_idx = 1:numel(z_grid)
+                    zv_k = z_grid(k_idx);
+                    if zv_k > 0
+                        ln_v = 99.0 * log(zv_k) - gammaln(100.0) - 0.5 * zv_k;
+                        if ln_v >= -745.0 && ln_v <= 709.0
+                            f_ref(k_idx) = exp(ln_v);
+                        end
+                    end
+                end
+                hold(ax_main, 'on');
+                plot(ax_main, z_grid, f_ref, '--', 'Color', [0.85, 0.15, 0.15], 'LineWidth', 1.6, 'DisplayName', 'Exacto (Causal Front)');
                 err = abs(f_inv - f_ref);
                 semilogy(ax_err, z_grid, max(err, 1e-17), '-', 'Color', [0.85, 0.15, 0.15], 'LineWidth', 1.6);
                 title(ax_err, sprintf('Error Absoluto frente a Solución Exacta (Max: %.2e)', max(err)), 'FontSize', 10, 'FontWeight', 'bold', 'Color', [0.05, 0.05, 0.05]);
