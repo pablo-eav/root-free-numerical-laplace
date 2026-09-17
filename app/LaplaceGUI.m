@@ -57,46 +57,55 @@ function LaplaceGUI()
     uicontrol('Parent', ctrl_panel, 'Style', 'text', 'String', 'Numerador A(s): [coeficientes en s, ej: [1 3] o escalar]', ...
               'HorizontalAlignment', 'left', ...
               'BackgroundColor', [0.94, 0.95, 0.96], 'ForegroundColor', [0.1, 0.1, 0.1], ...
-              'Units', 'normalized', 'Position', [0.05, 0.84, 0.9, 0.03]);
+              'Units', 'normalized', 'Position', [0.05, 0.85, 0.9, 0.025]);
     num_edit = uicontrol('Parent', ctrl_panel, 'Style', 'edit', 'String', '1', ...
                          'HorizontalAlignment', 'left', 'BackgroundColor', 'w', 'ForegroundColor', 'k', ...
-                         'Units', 'normalized', 'Position', [0.05, 0.80, 0.9, 0.038]);
+                         'Units', 'normalized', 'Position', [0.05, 0.815, 0.9, 0.035]);
 
     % Denominator input
     uicontrol('Parent', ctrl_panel, 'Style', 'text', 'String', 'Denominador B(s): [coeficientes en s, ej: [1 2 2] o FactorPoly]', ...
               'HorizontalAlignment', 'left', ...
               'BackgroundColor', [0.94, 0.95, 0.96], 'ForegroundColor', [0.1, 0.1, 0.1], ...
-              'Units', 'normalized', 'Position', [0.05, 0.74, 0.9, 0.03]);
+              'Units', 'normalized', 'Position', [0.05, 0.775, 0.9, 0.025]);
     den_edit = uicontrol('Parent', ctrl_panel, 'Style', 'edit', 'String', '[1, 2, 2]', ...
                          'HorizontalAlignment', 'left', 'BackgroundColor', 'w', 'ForegroundColor', 'k', ...
-                         'Units', 'normalized', 'Position', [0.05, 0.70, 0.9, 0.038]);
+                         'Units', 'normalized', 'Position', [0.05, 0.74, 0.9, 0.035]);
+
+    % Exact analytical reference input (NEW)
+    uicontrol('Parent', ctrl_panel, 'Style', 'text', 'String', 'Función Exacta f_exact(z): [opcional para error]', ...
+              'HorizontalAlignment', 'left', ...
+              'BackgroundColor', [0.94, 0.95, 0.96], 'ForegroundColor', [0.1, 0.1, 0.1], ...
+              'Units', 'normalized', 'Position', [0.05, 0.70, 0.9, 0.025]);
+    exact_edit = uicontrol('Parent', ctrl_panel, 'Style', 'edit', 'String', 'exp(-z) .* sin(z)', ...
+                           'HorizontalAlignment', 'left', 'BackgroundColor', 'w', 'ForegroundColor', 'k', ...
+                           'Units', 'normalized', 'Position', [0.05, 0.665, 0.9, 0.035]);
 
     % Time window inputs
     uicontrol('Parent', ctrl_panel, 'Style', 'text', 'String', 'Ventana Temporal [z_min, z_max]:', ...
               'HorizontalAlignment', 'left', ...
               'BackgroundColor', [0.94, 0.95, 0.96], 'ForegroundColor', [0.1, 0.1, 0.1], ...
-              'Units', 'normalized', 'Position', [0.05, 0.64, 0.9, 0.03]);
+              'Units', 'normalized', 'Position', [0.05, 0.625, 0.9, 0.025]);
     z_min_edit = uicontrol('Parent', ctrl_panel, 'Style', 'edit', 'String', '0.0', ...
                            'BackgroundColor', 'w', 'ForegroundColor', 'k', ...
-                           'Units', 'normalized', 'Position', [0.05, 0.60, 0.42, 0.038]);
+                           'Units', 'normalized', 'Position', [0.05, 0.59, 0.42, 0.035]);
     z_max_edit = uicontrol('Parent', ctrl_panel, 'Style', 'edit', 'String', '10.0', ...
                            'BackgroundColor', 'w', 'ForegroundColor', 'k', ...
-                           'Units', 'normalized', 'Position', [0.53, 0.60, 0.42, 0.038]);
+                           'Units', 'normalized', 'Position', [0.53, 0.59, 0.42, 0.035]);
 
     % Number of points
     uicontrol('Parent', ctrl_panel, 'Style', 'text', 'String', 'Puntos de Evaluación M:', ...
               'HorizontalAlignment', 'left', ...
               'BackgroundColor', [0.94, 0.95, 0.96], 'ForegroundColor', [0.1, 0.1, 0.1], ...
-              'Units', 'normalized', 'Position', [0.05, 0.54, 0.9, 0.03]);
+              'Units', 'normalized', 'Position', [0.05, 0.55, 0.9, 0.025]);
     pts_edit = uicontrol('Parent', ctrl_panel, 'Style', 'edit', 'String', '500', ...
                          'BackgroundColor', 'w', 'ForegroundColor', 'k', ...
-                         'Units', 'normalized', 'Position', [0.05, 0.50, 0.9, 0.038]);
+                         'Units', 'normalized', 'Position', [0.05, 0.515, 0.9, 0.035]);
 
     % Engine Selection Dropdown
     uicontrol('Parent', ctrl_panel, 'Style', 'text', 'String', 'Motor de Inversión:', ...
               'HorizontalAlignment', 'left', 'FontWeight', 'bold', ...
               'BackgroundColor', [0.94, 0.95, 0.96], 'ForegroundColor', [0.1, 0.1, 0.1], ...
-              'Units', 'normalized', 'Position', [0.05, 0.44, 0.9, 0.03]);
+              'Units', 'normalized', 'Position', [0.05, 0.465, 0.9, 0.025]);
     engine_items = {
         'Auto (Híbrido Inteligente - Recomendado)', ...
         'Levin AR(2) (División Laurent Root-Free)', ...
@@ -106,36 +115,36 @@ function LaplaceGUI()
     };
     engine_popup = uicontrol('Parent', ctrl_panel, 'Style', 'popupmenu', ...
                              'String', engine_items, 'Value', 1, ...
-                             'Units', 'normalized', 'Position', [0.05, 0.40, 0.9, 0.04]);
+                             'Units', 'normalized', 'Position', [0.05, 0.425, 0.9, 0.038]);
 
     % Invert Button
     uicontrol('Parent', ctrl_panel, 'Style', 'pushbutton', ...
               'String', '▶ INVERTIR TRANSFORMADA', ...
               'FontWeight', 'bold', 'FontSize', 11, ...
               'BackgroundColor', [0.15, 0.45, 0.85], 'ForegroundColor', 'w', ...
-              'Units', 'normalized', 'Position', [0.05, 0.32, 0.9, 0.06], ...
+              'Units', 'normalized', 'Position', [0.05, 0.35, 0.9, 0.055], ...
               'Callback', @on_invert_clicked);
 
     % Diagnostic Info Area
     uicontrol('Parent', ctrl_panel, 'Style', 'text', 'String', 'Diagnóstico y Rendimiento:', ...
               'HorizontalAlignment', 'left', 'FontWeight', 'bold', ...
               'BackgroundColor', [0.94, 0.95, 0.96], 'ForegroundColor', [0.1, 0.1, 0.1], ...
-              'Units', 'normalized', 'Position', [0.05, 0.26, 0.9, 0.03]);
+              'Units', 'normalized', 'Position', [0.05, 0.28, 0.9, 0.025]);
     diag_text = uicontrol('Parent', ctrl_panel, 'Style', 'edit', ...
                           'Max', 2, 'HorizontalAlignment', 'left', ...
                           'Enable', 'inactive', 'BackgroundColor', [0.98, 0.98, 0.99], ...
                           'ForegroundColor', [0.1, 0.1, 0.1], ...
                           'FontName', 'FixedWidth', 'FontSize', 8.5, ...
-                          'Units', 'normalized', 'Position', [0.05, 0.11, 0.9, 0.14]);
+                          'Units', 'normalized', 'Position', [0.05, 0.10, 0.9, 0.17]);
 
     % Export Buttons
     uicontrol('Parent', ctrl_panel, 'Style', 'pushbutton', ...
               'String', 'Exportar a Workspace', ...
-              'Units', 'normalized', 'Position', [0.05, 0.02, 0.42, 0.04], ...
+              'Units', 'normalized', 'Position', [0.05, 0.02, 0.42, 0.045], ...
               'Callback', @on_export_workspace);
     uicontrol('Parent', ctrl_panel, 'Style', 'pushbutton', ...
               'String', 'Exportar CSV', ...
-              'Units', 'normalized', 'Position', [0.53, 0.02, 0.42, 0.04], ...
+              'Units', 'normalized', 'Position', [0.53, 0.02, 0.42, 0.045], ...
               'Callback', @on_export_csv);
 
     % Right Display Panel with Dual Subplots
@@ -181,36 +190,42 @@ function LaplaceGUI()
             case 1 % Subamortiguado
                 num_edit.String = '1';
                 den_edit.String = '[1, 2, 2]';
+                exact_edit.String = 'exp(-z) .* sin(z)';
                 z_min_edit.String = '0.0';
                 z_max_edit.String = '10.0';
                 engine_popup.Value = 1;
             case 2 % Doble Resonancia (Batimiento)
                 num_edit.String = '[1, 0]';
                 den_edit.String = '[1, 0, 3.25, 0, 2.25]';
+                exact_edit.String = '0.8 * (cos(z) - cos(1.5 * z))';
                 z_min_edit.String = '0.0';
                 z_max_edit.String = '15.0';
                 engine_popup.Value = 1;
             case 3 % Racional con ceros y polos (Grado 4)
                 num_edit.String = '[1, 3]';
                 den_edit.String = '[1, 6, 23, 34, 26]';
+                exact_edit.String = '(1/17)*exp(-z).*(cos(z)+4*sin(z)) - (1/17)*exp(-2*z).*(cos(3*z)+(5/3)*sin(3*z))';
                 z_min_edit.String = '0.0';
                 z_max_edit.String = '8.0';
                 engine_popup.Value = 1;
             case 4 % Butterworth 6º Orden
                 num_edit.String = '1';
                 den_edit.String = '[1, 3.8637, 7.4641, 9.1416, 7.4641, 3.8637, 1.0]';
+                exact_edit.String = 'laplace.eval_butterworth6_exact(z)';
                 z_min_edit.String = '0.0';
                 z_max_edit.String = '15.0';
                 engine_popup.Value = 1;
             case 5 % Cascada Alto Orden K=100
                 num_edit.String = '1';
                 den_edit.String = 'laplace.FactorPoly(-0.5*ones(100,1))';
+                exact_edit.String = '(z.^99 ./ factorial(99)) .* exp(-0.5 * z)';
                 z_min_edit.String = '0.0';
                 z_max_edit.String = '35.0';
                 engine_popup.Value = 1;
             case 6 % Difusión Térmica Trascendente (Red Chebyshev K=10,000)
                 num_edit.String = '[]';
                 den_edit.String = 'laplace.chebyshev_diffusion_network(10000, 2e8)';
+                exact_edit.String = 'laplace.eval_diffusion_step_exact(z)';
                 z_min_edit.String = '0.0';
                 z_max_edit.String = '2.5';
                 engine_popup.Value = 1;
@@ -303,64 +318,41 @@ function LaplaceGUI()
             xlabel(ax_main, 'Tiempo z (s)', 'FontWeight', 'bold', 'Color', [0.1, 0.1, 0.1]);
             ylabel(ax_main, 'f(z)', 'FontWeight', 'bold', 'Color', [0.1, 0.1, 0.1]);
 
-            % Compute analytical reference if standard preset
+            % Compute analytical reference from exact_edit (or Modo Directo if empty)
             cla(ax_err);
-            if preset_popup.Value == 1
-                f_ref = exp(-z_grid) .* sin(z_grid);
-                hold(ax_main, 'on');
-                plot(ax_main, z_grid, f_ref, '--', 'Color', [0.85, 0.15, 0.15], 'LineWidth', 1.6, 'DisplayName', 'Exacto');
-                err = abs(f_inv - f_ref);
-                semilogy(ax_err, z_grid, max(err, 1e-17), '-', 'Color', [0.85, 0.15, 0.15], 'LineWidth', 1.6);
-                title(ax_err, sprintf('Error Absoluto frente a Solución Exacta (Max: %.2e)', max(err)), 'FontSize', 10, 'FontWeight', 'bold', 'Color', [0.05, 0.05, 0.05]);
-            elseif preset_popup.Value == 2
-                f_ref = 0.8 * (cos(z_grid) - cos(1.5 * z_grid));
-                hold(ax_main, 'on');
-                plot(ax_main, z_grid, f_ref, '--', 'Color', [0.85, 0.15, 0.15], 'LineWidth', 1.6, 'DisplayName', 'Exacto (Batimiento)');
-                err = abs(f_inv - f_ref);
-                semilogy(ax_err, z_grid, max(err, 1e-17), '-', 'Color', [0.85, 0.15, 0.15], 'LineWidth', 1.6);
-                title(ax_err, sprintf('Error Absoluto frente a Solución Exacta (Max: %.2e)', max(err)), 'FontSize', 10, 'FontWeight', 'bold', 'Color', [0.05, 0.05, 0.05]);
-            elseif preset_popup.Value == 3
-                f_ref = (1/17) * exp(-z_grid) .* (cos(z_grid) + 4*sin(z_grid)) - ...
-                        (1/17) * exp(-2*z_grid) .* (cos(3*z_grid) + (5/3)*sin(3*z_grid));
-                hold(ax_main, 'on');
-                plot(ax_main, z_grid, f_ref, '--', 'Color', [0.85, 0.15, 0.15], 'LineWidth', 1.6, 'DisplayName', 'Exacto');
-                err = abs(f_inv - f_ref);
-                semilogy(ax_err, z_grid, max(err, 1e-17), '-', 'Color', [0.85, 0.15, 0.15], 'LineWidth', 1.6);
-                title(ax_err, sprintf('Error Absoluto frente a Solución Exacta (Max: %.2e)', max(err)), 'FontSize', 10, 'FontWeight', 'bold', 'Color', [0.05, 0.05, 0.05]);
-            elseif preset_popup.Value == 4
-                f_ref = laplace.eval_butterworth6_exact(z_grid);
-                hold(ax_main, 'on');
-                plot(ax_main, z_grid, f_ref, '--', 'Color', [0.85, 0.15, 0.15], 'LineWidth', 1.6, 'DisplayName', 'Exacto');
-                err = abs(f_inv - f_ref);
-                semilogy(ax_err, z_grid, max(err, 1e-17), '-', 'Color', [0.85, 0.15, 0.15], 'LineWidth', 1.6);
-                title(ax_err, sprintf('Error Absoluto frente a Solución Exacta (Max: %.2e)', max(err)), 'FontSize', 10, 'FontWeight', 'bold', 'Color', [0.05, 0.05, 0.05]);
-            elseif preset_popup.Value == 5
-                % Exact reference for 100-pole cascade: z^99 / 99! * exp(-0.5*z)
-                f_ref = zeros(size(z_grid));
-                for k_idx = 1:numel(z_grid)
-                    zv_k = z_grid(k_idx);
-                    if zv_k > 0
-                        ln_v = 99.0 * log(zv_k) - gammaln(100.0) - 0.5 * zv_k;
-                        if ln_v >= -745.0 && ln_v <= 709.0
-                            f_ref(k_idx) = exp(ln_v);
-                        end
+            exact_str = strtrim(exact_edit.String);
+            has_exact = false;
+            
+            if ~isempty(exact_str)
+                try
+                    % Make both 'z' and 't' available as the grid variables
+                    z = z_grid;
+                    t = z_grid;
+                    eval_cmd = exact_str;
+                    if startsWith(eval_cmd, 'eval_')
+                        eval_cmd = ['laplace.' eval_cmd];
                     end
+                    f_ref = eval(eval_cmd);
+                    if isscalar(f_ref)
+                        f_ref = repmat(f_ref, size(z_grid));
+                    end
+                    if numel(f_ref) == numel(z_grid) && ~any(isnan(f_ref)) && ~any(isinf(f_ref))
+                        has_exact = true;
+                    end
+                catch
+                    has_exact = false;
                 end
+            end
+            
+            if has_exact
                 hold(ax_main, 'on');
-                plot(ax_main, z_grid, f_ref, '--', 'Color', [0.85, 0.15, 0.15], 'LineWidth', 1.6, 'DisplayName', 'Exacto (Causal Front)');
+                plot(ax_main, z_grid, f_ref, '--', 'Color', [0.85, 0.15, 0.15], 'LineWidth', 1.6, 'DisplayName', 'Exacto');
                 err = abs(f_inv - f_ref);
                 semilogy(ax_err, z_grid, max(err, 1e-17), '-', 'Color', [0.85, 0.15, 0.15], 'LineWidth', 1.6);
                 title(ax_err, sprintf('Error Absoluto frente a Solución Exacta (Max: %.2e)', max(err)), 'FontSize', 10, 'FontWeight', 'bold', 'Color', [0.05, 0.05, 0.05]);
-            elseif preset_popup.Value == 6
-                f_ref = laplace.eval_diffusion_step_exact(z_grid);
-                hold(ax_main, 'on');
-                plot(ax_main, z_grid, f_ref, '--', 'Color', [0.85, 0.15, 0.15], 'LineWidth', 1.6, 'DisplayName', 'Exacto (Fourier/erfc)');
-                err = abs(f_inv - f_ref);
-                semilogy(ax_err, z_grid, max(err, 1e-16), '-', 'Color', [0.85, 0.15, 0.15], 'LineWidth', 1.6);
-                title(ax_err, sprintf('Error frente a Solución Exacta de Difusión (Max: %.2e)', max(err)), 'FontSize', 10, 'FontWeight', 'bold', 'Color', [0.05, 0.05, 0.05]);
             else
                 plot(ax_err, z_grid, abs(f_inv), '-', 'Color', [0.55, 0.1, 0.65], 'LineWidth', 1.6);
-                title(ax_err, 'Magnitud Absoluta |f(z)|', 'FontSize', 10, 'FontWeight', 'bold', 'Color', [0.05, 0.05, 0.05]);
+                title(ax_err, 'Magnitud Absoluta |f(z)| (Modo Directo)', 'FontSize', 10, 'FontWeight', 'bold', 'Color', [0.05, 0.05, 0.05]);
             end
             grid(ax_err, 'on');
             box(ax_err, 'on');
