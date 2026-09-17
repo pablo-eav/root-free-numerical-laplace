@@ -40,12 +40,12 @@ function LaplaceGUI()
               'Units', 'normalized', 'Position', [0.05, 0.94, 0.9, 0.03]);
           
     preset_items = {
-        '1. Racional 2º Orden (Oscilador): 1 / (s^2 + 2s + 2)', ...
-        '2. Doble Polo Crítico: 1 / (s^2 + 4s + 4)', ...
-        '3. Racional con Ceros (Grado 4): (s + 3) / (s^4 + 6s^3 + 23s^2 + 34s + 26)', ...
-        '4. Filtro Butterworth 6º Orden: 1 / (s^6 + 3.86s^5 + ... + 1)', ...
-        '5. Cascada Masiva K=100: 1 / (s + 1)^100', ...
-        '6. Retardo Padé (2/2): (s^2 - 6s + 12) / (s^2 + 6s + 12)'
+        '1. Oscilador Racional 2º Orden: 1 / (s^2 + 2s + 2)', ...
+        '2. Fracción General con Ceros: (s + 3) / (s^4 + 6s^3 + 23s^2 + 34s + 26)', ...
+        '3. Cascada Masiva (K=100): 1 / (s + 1)^100', ...
+        '4. 5000 Resonadores Armónicos (K=10,000)', ...
+        '5. Red Chebyshev Distribuida (N=1,000,000)', ...
+        '6. Difusión Térmica Trascendente (EDP de Calor)'
     };
     
     preset_popup = uicontrol('Parent', ctrl_panel, 'Style', 'popupmenu', ...
@@ -182,31 +182,37 @@ function LaplaceGUI()
                 den_edit.String = '[1, 2, 2]';
                 z_min_edit.String = '0.0';
                 z_max_edit.String = '10.0';
-            case 2 % Doble polo
-                num_edit.String = '1';
-                den_edit.String = '[1, 4, 4]';
-                z_min_edit.String = '0.0';
-                z_max_edit.String = '8.0';
-            case 3 % Racional con ceros y polos (Grado 4)
+                engine_popup.Value = 1;
+            case 2 % Racional con ceros y polos (Grado 4)
                 num_edit.String = '[1, 3]';
                 den_edit.String = '[1, 6, 23, 34, 26]';
                 z_min_edit.String = '0.0';
                 z_max_edit.String = '8.0';
-            case 4 % Butterworth 6º Orden
-                num_edit.String = '1';
-                den_edit.String = '[1, 3.8637, 7.4641, 9.1416, 7.4641, 3.8637, 1.0]';
-                z_min_edit.String = '0.0';
-                z_max_edit.String = '15.0';
-            case 5 % Cascada K=100
+                engine_popup.Value = 1;
+            case 3 % Cascada K=100
                 num_edit.String = '1';
                 den_edit.String = 'laplace.FactorPoly(-ones(100,1))';
                 z_min_edit.String = '0.0';
                 z_max_edit.String = '150.0';
-            case 6 % Retardo Pade (2/2)
-                num_edit.String = '[1, -6, 12]';
-                den_edit.String = '[1, 6, 12]';
-                z_min_edit.String = '0.0';
-                z_max_edit.String = '5.0';
+                engine_popup.Value = 1;
+            case 4 % 5000 resonadores
+                num_edit.String = '[]';
+                den_edit.String = 'laplace.harmonic_resonators(5000)';
+                z_min_edit.String = '1e-5';
+                z_max_edit.String = '0.02';
+                engine_popup.Value = 1;
+            case 5 % Chebyshev 1,000,000
+                num_edit.String = '[]';
+                den_edit.String = 'laplace.chebyshev_network(1000000, 2e8)';
+                z_min_edit.String = '1e-9';
+                z_max_edit.String = '1e-6';
+                engine_popup.Value = 1;
+            case 6 % Difusión Térmica (EDP de Calor)
+                num_edit.String = 'prod(((2*(1:80)-1).^2)*(pi^2)/4 .^ (1/80))^80';
+                den_edit.String = 'laplace.FactorPoly([0, -((2*(1:80)-1).^2)*(pi^2)/4])';
+                z_min_edit.String = '1e-4';
+                z_max_edit.String = '2.5';
+                engine_popup.Value = 4; % TaylorAdaptive
         end
         on_invert_clicked();
     end
@@ -291,13 +297,20 @@ function LaplaceGUI()
                 err = abs(f_inv - f_ref);
                 semilogy(ax_err, z_grid, max(err, 1e-17), '-', 'Color', [0.85, 0.15, 0.15], 'LineWidth', 1.6);
                 title(ax_err, sprintf('Error Absoluto frente a Solución Exacta (Max: %.2e)', max(err)), 'FontSize', 10, 'FontWeight', 'bold', 'Color', [0.05, 0.05, 0.05]);
-            elseif preset_popup.Value == 2
-                f_ref = z_grid .* exp(-2 * z_grid);
+            elseif preset_popup.Value == 4
+                f_ref = laplace.eval_harmonic_resonators_exact(5000, z_grid);
                 hold(ax_main, 'on');
-                plot(ax_main, z_grid, f_ref, '--', 'Color', [0.85, 0.15, 0.15], 'LineWidth', 1.6, 'DisplayName', 'Exacto');
+                plot(ax_main, z_grid, f_ref, '--', 'Color', [0.85, 0.15, 0.15], 'LineWidth', 1.6, 'DisplayName', 'Núcleo Dirichlet');
                 err = abs(f_inv - f_ref);
-                semilogy(ax_err, z_grid, max(err, 1e-17), '-', 'Color', [0.85, 0.15, 0.15], 'LineWidth', 1.6);
-                title(ax_err, sprintf('Error Absoluto frente a Solución Exacta (Max: %.2e)', max(err)), 'FontSize', 10, 'FontWeight', 'bold', 'Color', [0.05, 0.05, 0.05]);
+                semilogy(ax_err, z_grid, max(err, 1e-16), '-', 'Color', [0.85, 0.15, 0.15], 'LineWidth', 1.6);
+                title(ax_err, sprintf('Error frente al Núcleo de Dirichlet (Max: %.2e)', max(err)), 'FontSize', 10, 'FontWeight', 'bold', 'Color', [0.05, 0.05, 0.05]);
+            elseif preset_popup.Value == 6
+                f_ref = laplace.eval_diffusion_step_exact(z_grid);
+                hold(ax_main, 'on');
+                plot(ax_main, z_grid, f_ref, '--', 'Color', [0.85, 0.15, 0.15], 'LineWidth', 1.6, 'DisplayName', 'Exacto (Fourier/erfc)');
+                err = abs(f_inv - f_ref);
+                semilogy(ax_err, z_grid, max(err, 1e-16), '-', 'Color', [0.85, 0.15, 0.15], 'LineWidth', 1.6);
+                title(ax_err, sprintf('Error frente a Solución Exacta de Difusión (Max: %.2e)', max(err)), 'FontSize', 10, 'FontWeight', 'bold', 'Color', [0.05, 0.05, 0.05]);
             else
                 plot(ax_err, z_grid, abs(f_inv), '-', 'Color', [0.55, 0.1, 0.65], 'LineWidth', 1.6);
                 title(ax_err, 'Magnitud Absoluta |f(z)|', 'FontSize', 10, 'FontWeight', 'bold', 'Color', [0.05, 0.05, 0.05]);
