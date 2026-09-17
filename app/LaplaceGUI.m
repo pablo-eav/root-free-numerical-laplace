@@ -188,7 +188,7 @@ function LaplaceGUI()
                 num_edit.String = '[1, 0]';
                 den_edit.String = '[1, 0, 3.25, 0, 2.25]';
                 z_min_edit.String = '0.0';
-                z_max_edit.String = '25.0';
+                z_max_edit.String = '15.0';
                 engine_popup.Value = 1;
             case 3 % Racional con ceros y polos (Grado 4)
                 num_edit.String = '[1, 3]';
