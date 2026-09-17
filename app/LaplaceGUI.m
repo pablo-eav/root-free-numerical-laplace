@@ -204,7 +204,7 @@ function LaplaceGUI()
                 z_max_edit.String = '1e-6';
             case 6 % Difusión
                 num_edit.String = '1';
-                den_edit.String = 'laplace.FactorPoly([0; -((2*(1:80)-1).^2)*(pi^2)/4])';
+                den_edit.String = 'laplace.FactorPoly([0, -((2*(1:80)-1).^2)*(pi^2)/4])';
                 z_min_edit.String = '1e-4';
                 z_max_edit.String = '2.5';
         end
