@@ -69,17 +69,10 @@ classdef EngineLevin
             % 5. Factores alpha_n = c_{n+1} / n! en escala logarítmica segura
             alphas = laplace.EngineLevin.compute_alphas(c_coeffs);
             
-            % 6. Evaluación en dominio dual (Horner en [0, z_fuj] + Levin en (z_fuj, z_max])
-            shift = max(0, rel_deg - 1);
-            
             for i = 1:M_pts
                 zv = z_arr(i);
                 if zv <= 1e-15
-                    if shift == 0
-                        f_vals(i) = alphas(1);
-                    else
-                        f_vals(i) = 0.0;
-                    end
+                    f_vals(i) = alphas(1);
                     continue;
                 end
                 
@@ -95,12 +88,7 @@ classdef EngineLevin
                     val = laplace.EngineLevin.eval_levin_point(alphas, zv, variant, kl_order);
                 end
                 
-                % Aplicar desplazamiento por grado relativo: f(z) = z^(rel_deg - 1) * S
-                if shift > 0
-                    f_vals(i) = (zv^shift) * val;
-                else
-                    f_vals(i) = val;
-                end
+                f_vals(i) = val;
             end
             
             info = struct('engine', sprintf('Levin AR(2) [%s, var: %s]', frac_type, variant), ...
