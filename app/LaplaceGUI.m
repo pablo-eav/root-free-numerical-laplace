@@ -305,23 +305,22 @@ function LaplaceGUI()
             diag_text.String = diag_str;
 
             % Plot main
+            hold(ax_main, 'off');
             cla(ax_main);
             plot(ax_main, z_grid, f_inv, '-', 'Color', [0.0, 0.4, 0.85], 'LineWidth', 2.0, 'DisplayName', info.engine);
             grid(ax_main, 'on');
             box(ax_main, 'on');
-            lgd = legend(ax_main, 'Location', 'best');
-            set(lgd, 'Color', [1 1 1], 'TextColor', [0.1 0.1 0.1], 'EdgeColor', [0.75 0.75 0.75]);
-            set(ax_main, 'Color', [1, 1, 1], 'XColor', [0.1, 0.1, 0.1], 'YColor', [0.1, 0.1, 0.1], ...
-                         'GridColor', [0.8, 0.8, 0.8], 'GridAlpha', 0.6, ...
-                         'FontSize', 10, 'FontWeight', 'bold', 'LineWidth', 1.2);
             title(ax_main, sprintf('Respuesta Invertida f(z) [%s]', info.engine), 'FontSize', 11, 'FontWeight', 'bold', 'Color', [0.05, 0.05, 0.05]);
             xlabel(ax_main, 'Tiempo z (s)', 'FontWeight', 'bold', 'Color', [0.1, 0.1, 0.1]);
             ylabel(ax_main, 'f(z)', 'FontWeight', 'bold', 'Color', [0.1, 0.1, 0.1]);
+            xlim(ax_main, [z_min, z_max]);
 
             % Compute analytical reference from exact_edit (or Modo Directo if empty)
+            hold(ax_err, 'off');
             cla(ax_err);
             exact_str = strtrim(exact_edit.String);
             has_exact = false;
+            f_ref = [];
             
             if ~isempty(exact_str)
                 try
@@ -347,6 +346,7 @@ function LaplaceGUI()
             if has_exact
                 hold(ax_main, 'on');
                 plot(ax_main, z_grid, f_ref, '--', 'Color', [0.85, 0.15, 0.15], 'LineWidth', 1.6, 'DisplayName', 'Exacto');
+                hold(ax_main, 'off');
                 err = abs(f_inv - f_ref);
                 semilogy(ax_err, z_grid, max(err, 1e-17), '-', 'Color', [0.85, 0.15, 0.15], 'LineWidth', 1.6);
                 title(ax_err, sprintf('Error Absoluto frente a Solución Exacta (Max: %.2e)', max(err)), 'FontSize', 10, 'FontWeight', 'bold', 'Color', [0.05, 0.05, 0.05]);
@@ -354,6 +354,8 @@ function LaplaceGUI()
                 plot(ax_err, z_grid, abs(f_inv), '-', 'Color', [0.55, 0.1, 0.65], 'LineWidth', 1.6);
                 title(ax_err, 'Magnitud Absoluta |f(z)| (Modo Directo)', 'FontSize', 10, 'FontWeight', 'bold', 'Color', [0.05, 0.05, 0.05]);
             end
+            xlim(ax_err, [z_min, z_max]);
+            ylim(ax_err, 'auto');
             grid(ax_err, 'on');
             box(ax_err, 'on');
             set(ax_err, 'Color', [1, 1, 1], 'XColor', [0.1, 0.1, 0.1], 'YColor', [0.1, 0.1, 0.1], ...
@@ -361,6 +363,29 @@ function LaplaceGUI()
                          'FontSize', 10, 'FontWeight', 'bold', 'LineWidth', 1.2);
             xlabel(ax_err, 'Tiempo z (s)', 'FontWeight', 'bold', 'Color', [0.1, 0.1, 0.1]);
             ylabel(ax_err, 'Amplitud / |Error|', 'FontWeight', 'bold', 'Color', [0.1, 0.1, 0.1]);
+
+            % Auto-scale tight Y-limits for ax_main to ensure crisp visibility
+            all_y = f_inv(~isnan(f_inv) & ~isinf(f_inv));
+            if has_exact && ~isempty(f_ref)
+                all_y = [all_y(:); f_ref(~isnan(f_ref) & ~isinf(f_ref))];
+            end
+            if ~isempty(all_y)
+                y_lo = min(all_y);
+                y_hi = max(all_y);
+                span = y_hi - y_lo;
+                if span < 1e-12
+                    span = max(abs(y_hi) * 0.1, 1.0);
+                end
+                ylim(ax_main, [y_lo - 0.08 * span, y_hi + 0.08 * span]);
+            else
+                ylim(ax_main, 'auto');
+            end
+
+            lgd = legend(ax_main, 'Location', 'best');
+            set(lgd, 'Color', [1 1 1], 'TextColor', [0.1 0.1 0.1], 'EdgeColor', [0.75 0.75 0.75]);
+            set(ax_main, 'Color', [1, 1, 1], 'XColor', [0.1, 0.1, 0.1], 'YColor', [0.1, 0.1, 0.1], ...
+                         'GridColor', [0.8, 0.8, 0.8], 'GridAlpha', 0.6, ...
+                         'FontSize', 10, 'FontWeight', 'bold', 'LineWidth', 1.2);
 
         catch ME
             errordlg(sprintf('Error durante la inversión: %s', ME.message), 'Error de Ejecución');

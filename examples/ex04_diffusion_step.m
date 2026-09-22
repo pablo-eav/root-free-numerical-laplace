@@ -13,28 +13,18 @@
 
 clear; clc; close all;
 
-N_modes = 80;
+N_modes = 10000;
 fprintf('=== EX04: DIFUSION TERMICA UNIDIMENSIONAL (ESCALON) ===\n');
 
-% Construct FactorPoly roots for denominator s * prod(s + p_k)
-k = (1:N_modes).';
-p_k = ((2.0 .* k - 1.0).^2) .* (pi^2) / 4.0;
-roots_den = [0; -p_k];
-
-% Gain to make numerator equal to prod(p_k) so DC gain = 1
-gain_den = 1.0;
-num_val = prod(p_k .^ (1.0 / N_modes)) ^ N_modes; % Scale-safe product
-
-den_poly = laplace.FactorPoly('roots', roots_den, 'gain', gain_den);
-num_poly = num_val;
+% Construct distributed Chebyshev diffusion network (Heat equation continuum limit)
+pf = laplace.chebyshev_diffusion_network(N_modes, 2e8);
 
 % Time grid
 z = linspace(1e-4, 2.5, 300);
 
 % Invert using root-free engine
 tic;
-opts = struct('engine', 'TaylorAdaptive', 'tol', 1e-4);
-[f_inv, info] = laplace.invert(num_poly, den_poly, z, opts);
+[f_inv, info] = laplace.invert([], pf, z);
 t_inv = toc;
 fprintf('Inversion numerica: %.4f ms (Motor: %s)\n', t_inv * 1000, info.engine);
 

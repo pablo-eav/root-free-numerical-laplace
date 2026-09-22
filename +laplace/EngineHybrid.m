@@ -27,6 +27,7 @@ classdef EngineHybrid
             else
                 engine_choice = 'Auto';
             end
+            choice_str = lower(char(engine_choice));
             if isfield(options, 'max_terms')
                 max_terms = options.max_terms;
             else
@@ -46,7 +47,6 @@ classdef EngineHybrid
             % If b_input is PartialFractions and poles are purely imaginary,
             % modal summation is exact and O(K)
             if isa(b_input, 'laplace.PartialFractions')
-                choice_str = lower(char(engine_choice));
                 if strcmp(choice_str, 'auto') || ~isempty(strfind(choice_str, 'modal'))
                     f_vals = b_input.evaluate_modal(z_grid);
                     info = struct('engine', 'Descomposición Modal Exacta (PartialFractions)', ...
@@ -96,8 +96,8 @@ classdef EngineHybrid
                     % Pure cascade (s + a)^K where Laurent-Stirling is exact O(1)
                     selected = 'stirling';
                 elseif isnumeric(b_input) && (isnumeric(a_input) || isempty(a_input))
-                    % Canonical rational fractions A(s)/B(s): Root-Free Laurent + Levin AR(2)
-                    selected = 'levin';
+                    % Canonical rational fractions A(s)/B(s): Möbius-Laguerre is unconditionally stable (zero Taylor hump)
+                    selected = 'laguerre';
                 else
                     selected = 'laguerre';
                 end
