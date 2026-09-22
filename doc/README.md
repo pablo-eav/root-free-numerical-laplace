@@ -1,5 +1,11 @@
 # Root-Free Numerical Laplace Inversion Toolbox for MATLAB
 
+[![View Root-Free Laplace on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://es.mathworks.com/matlabcentral/fileexchange/184728-root-free-numerical-laplace)
+[![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-blue.svg)](https://github.com/pablo-eav/root-free-numerical-laplace)
+
+> 🔗 **Official MATLAB Central File Exchange Entry (ID: 184728)**:  
+> [https://es.mathworks.com/matlabcentral/fileexchange/184728-root-free-numerical-laplace](https://es.mathworks.com/matlabcentral/fileexchange/184728-root-free-numerical-laplace)
+
 A high-performance MATLAB toolbox for **Root-Free Numerical Laplace Inversion** supporting orders from $K = 1$ to $K = 1,000,000$ in standard IEEE 754 double precision (`float64`).
 
 ---

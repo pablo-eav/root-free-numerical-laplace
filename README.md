@@ -2,12 +2,16 @@
 
 ![Root-Free Laplace Logo](toolbox_logo.png)
 
-[![View Root-Free Laplace on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange)
+[![View Root-Free Laplace on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://es.mathworks.com/matlabcentral/fileexchange/184728-root-free-numerical-laplace)
 [![Version](https://img.shields.io/badge/version-1.0.1-blue.svg)](https://github.com/pablo-eav/root-free-numerical-laplace)
-[![Platform](https://img.shields.io/badge/platform-MATLAB%20%7C%20Octave-orange.svg)](https://www.mathworks.com)
+[![Platform](https://img.shields.io/badge/platform-MATLAB%20%7C%20Octave-orange.svg)](https://es.mathworks.com/matlabcentral/fileexchange/184728-root-free-numerical-laplace)
 [![License](https://img.shields.io/badge/license-Commercial%20%2F%2030--Day%20Trial-green.svg)](https://rootfreelaplace.lemonsqueezy.com/checkout/buy/764715dc-3f4b-4f8f-956d-aebc574b217f)
 
 **Industrial-Grade Numerical Inversion of Massive-Order Transfer Functions Without Root-Finding.**
+
+> [!TIP]
+> 🔗 **Official MATLAB Central File Exchange Entry (ID: 184728)**:  
+> [https://es.mathworks.com/matlabcentral/fileexchange/184728-root-free-numerical-laplace](https://es.mathworks.com/matlabcentral/fileexchange/184728-root-free-numerical-laplace)
 
 ---
 
@@ -98,11 +102,13 @@ If you use this toolbox in your scientific research or industrial design, please
 @software{Aballe_Laplace_Toolbox_2026,
   author = {Aballe Vázquez, Pablo Enrique},
   title = {{Root-Free Numerical Laplace Inversion Toolbox for MATLAB \& Octave}},
-  version = {1.0.0},
+  version = {1.0.1},
   year = {2026},
-  url = {https://rootfreelaplace.lemonsqueezy.com/checkout/buy/764715dc-3f4b-4f8f-956d-aebc574b217f}
+  url = {https://es.mathworks.com/matlabcentral/fileexchange/184728-root-free-numerical-laplace}
 }
 ```
 
 - **Author**: Pablo Enrique Aballe Vázquez
+- **MATLAB Central File Exchange**: [https://es.mathworks.com/matlabcentral/fileexchange/184728-root-free-numerical-laplace](https://es.mathworks.com/matlabcentral/fileexchange/184728-root-free-numerical-laplace)
+- **GitHub Repository**: [https://github.com/pablo-eav/root-free-numerical-laplace](https://github.com/pablo-eav/root-free-numerical-laplace)
 - **Store & Subscriptions**: [https://rootfreelaplace.lemonsqueezy.com/checkout/buy/764715dc-3f4b-4f8f-956d-aebc574b217f](https://rootfreelaplace.lemonsqueezy.com/checkout/buy/764715dc-3f4b-4f8f-956d-aebc574b217f)
