@@ -5,7 +5,7 @@
 [![View Root-Free Laplace on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://es.mathworks.com/matlabcentral/fileexchange/184728-root-free-numerical-laplace)
 [![Version](https://img.shields.io/badge/version-1.0.2-blue.svg)](https://github.com/pablo-eav/root-free-numerical-laplace)
 [![Platform](https://img.shields.io/badge/platform-MATLAB%20%7C%20Octave-orange.svg)](https://es.mathworks.com/matlabcentral/fileexchange/184728-root-free-numerical-laplace)
-[![License](https://img.shields.io/badge/license-Commercial%20%2F%2030--Day%20Trial-green.svg)](https://rootfreelaplace.lemonsqueezy.com/checkout/buy/764715dc-3f4b-4f8f-956d-aebc574b217f)
+[![License](https://img.shields.io/badge/license-Commercial%20%2F%2030--Day%20Trial-green.svg)](https://rootfreelaplace.lemonsqueezy.com/checkout/buy/2b082189-262e-4c99-8ff3-546f4c9b5109?enabled=2159880%2C2159881%2C2159882)
 
 **Industrial-Grade Numerical Inversion of Massive-Order Transfer Functions Without Root-Finding.**
 
@@ -49,7 +49,7 @@ The **Root-Free Laplace Inversion Toolbox** computes exact time-domain responses
 This toolbox includes an **automatic 30-day full-featured evaluation trial** upon installation.
 
 To acquire an annual subscription key (Student, Academic, or Commercial PRO), please visit:
-👉 **[Official Subscription Store (Lemon Squeezy)](https://rootfreelaplace.lemonsqueezy.com/checkout/buy/764715dc-3f4b-4f8f-956d-aebc574b217f)**
+👉 **[Official Subscription Store (Lemon Squeezy)](https://rootfreelaplace.lemonsqueezy.com/checkout/buy/2b082189-262e-4c99-8ff3-546f4c9b5109?enabled=2159880%2C2159881%2C2159882)**
 
 | Subscription Tier | Annual Fee | Target Audience |
 | :--- | :---: | :--- |
@@ -111,4 +111,4 @@ If you use this toolbox in your scientific research or industrial design, please
 - **Author**: Pablo Enrique Aballe Vázquez
 - **MATLAB Central File Exchange**: [https://es.mathworks.com/matlabcentral/fileexchange/184728-root-free-numerical-laplace](https://es.mathworks.com/matlabcentral/fileexchange/184728-root-free-numerical-laplace)
 - **GitHub Repository**: [https://github.com/pablo-eav/root-free-numerical-laplace](https://github.com/pablo-eav/root-free-numerical-laplace)
-- **Store & Subscriptions**: [https://rootfreelaplace.lemonsqueezy.com/checkout/buy/764715dc-3f4b-4f8f-956d-aebc574b217f](https://rootfreelaplace.lemonsqueezy.com/checkout/buy/764715dc-3f4b-4f8f-956d-aebc574b217f)
+- **Store & Subscriptions**: [https://rootfreelaplace.lemonsqueezy.com/checkout/buy/2b082189-262e-4c99-8ff3-546f4c9b5109?enabled=2159880%2C2159881%2C2159882](https://rootfreelaplace.lemonsqueezy.com/checkout/buy/2b082189-262e-4c99-8ff3-546f4c9b5109?enabled=2159880%2C2159881%2C2159882)
