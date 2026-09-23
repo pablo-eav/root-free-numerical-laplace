@@ -14,7 +14,7 @@ Key Features:
 - Interactive Desktop Studio: Includes LaplaceGUI for dual real-time plotting, engineering presets, and CSV/Workspace data export.
 - Pure MATLAB implementation compatible with R2018b through R2026+ and GNU Octave 10+.</param.description>
     <param.screenshot>${PROJECT_ROOT}\toolbox_logo.png</param.screenshot>
-    <param.version>1.0.2</param.version>
+    <param.version>1.0.3</param.version>
     <param.output>${PROJECT_ROOT}\root_free_laplace.mltbx</param.output>
     <param.products.name>
       <item>MATLAB</item>

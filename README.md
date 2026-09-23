@@ -3,7 +3,7 @@
 ![Root-Free Laplace Logo](toolbox_logo.png)
 
 [![View Root-Free Laplace on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://es.mathworks.com/matlabcentral/fileexchange/184728-root-free-numerical-laplace)
-[![Version](https://img.shields.io/badge/version-1.0.2-blue.svg)](https://github.com/pablo-eav/root-free-numerical-laplace)
+[![Version](https://img.shields.io/badge/version-1.0.3-blue.svg)](https://github.com/pablo-eav/root-free-numerical-laplace)
 [![Platform](https://img.shields.io/badge/platform-MATLAB%20%7C%20Octave-orange.svg)](https://es.mathworks.com/matlabcentral/fileexchange/184728-root-free-numerical-laplace)
 [![License](https://img.shields.io/badge/license-Commercial%20%2F%2030--Day%20Trial-green.svg)](https://rootfreelaplace.lemonsqueezy.com/checkout/buy/2b082189-262e-4c99-8ff3-546f4c9b5109?enabled=2159880%2C2159881%2C2159882)
 
@@ -102,7 +102,7 @@ If you use this toolbox in your scientific research or industrial design, please
 @software{Aballe_Laplace_Toolbox_2026,
   author = {Aballe Vázquez, Pablo Enrique},
   title = {{Root-Free Numerical Laplace Inversion Toolbox for MATLAB \& Octave}},
-  version = {1.0.2},
+  version = {1.0.3},
   year = {2026},
   url = {https://es.mathworks.com/matlabcentral/fileexchange/184728-root-free-numerical-laplace}
 }
