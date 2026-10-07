@@ -281,6 +281,12 @@ function LaplaceGUI()
                 den_str = ['laplace.' den_str];
             end
             den_str = strrep(den_str, '[0;', '[0,');
+            
+            % Security check against command injection and arbitrary OS execution
+            if ~is_safe_expression(den_str)
+                errordlg('Expresión del denominador contiene comandos no autorizados o inseguros.', 'Error de Seguridad');
+                return;
+            end
             den_obj = eval(den_str);
 
             % Evaluate Numerator (default to 1 if empty)
@@ -289,6 +295,10 @@ function LaplaceGUI()
             else
                 if startsWith(num_str, 'FactorPoly') || startsWith(num_str, 'PartialFractions')
                     num_str = ['laplace.' num_str];
+                end
+                if ~is_safe_expression(num_str)
+                    errordlg('Expresión del numerador contiene comandos no autorizados o inseguros.', 'Error de Seguridad');
+                    return;
                 end
                 num_obj = eval(num_str);
             end
@@ -341,23 +351,27 @@ function LaplaceGUI()
             f_ref = [];
             
             if ~isempty(exact_str)
-                try
-                    % Make both 'z' and 't' available as the grid variables
-                    z = z_grid;
-                    t = z_grid;
-                    eval_cmd = exact_str;
-                    if startsWith(eval_cmd, 'eval_')
-                        eval_cmd = ['laplace.' eval_cmd];
-                    end
-                    f_ref = eval(eval_cmd);
-                    if isscalar(f_ref)
-                        f_ref = repmat(f_ref, size(z_grid));
-                    end
-                    if numel(f_ref) == numel(z_grid) && ~any(isnan(f_ref)) && ~any(isinf(f_ref))
-                        has_exact = true;
-                    end
-                catch
+                if ~is_safe_expression(exact_str)
                     has_exact = false;
+                else
+                    try
+                        % Make both 'z' and 't' available as the grid variables
+                        z = z_grid;
+                        t = z_grid;
+                        eval_cmd = exact_str;
+                        if startsWith(eval_cmd, 'eval_')
+                            eval_cmd = ['laplace.' eval_cmd];
+                        end
+                        f_ref = eval(eval_cmd);
+                        if isscalar(f_ref)
+                            f_ref = repmat(f_ref, size(z_grid));
+                        end
+                        if numel(f_ref) == numel(z_grid) && ~any(isnan(f_ref)) && ~any(isinf(f_ref))
+                            has_exact = true;
+                        end
+                    catch
+                        has_exact = false;
+                    end
                 end
             end
             
@@ -439,6 +453,26 @@ function LaplaceGUI()
     function on_commercial_license(~, ~)
         store_url = 'https://rootfreelaplace.lemonsqueezy.com/checkout/buy/2b082189-262e-4c99-8ff3-546f4c9b5109?enabled=2159880%2C2159881%2C2159882';
         web(store_url, '-browser');
+    end
+
+    function safe = is_safe_expression(expr_str)
+        % Security check against command injection and arbitrary OS execution
+        if isempty(expr_str)
+            safe = true;
+            return;
+        end
+        dangerous_tokens = {'system', 'dos', 'unix', '!', 'delete', 'rmdir', ...
+                            'exit', 'quit', 'evalin', 'feval', 'builtin', ...
+                            'perl', 'python', 'java', 'web', 'urlread', 'fileread', ...
+                            'fopen', 'fwrite', 'load', 'save'};
+        low = lower(expr_str);
+        safe = true;
+        for k = 1:numel(dangerous_tokens)
+            if contains(low, dangerous_tokens{k})
+                safe = false;
+                return;
+            end
+        end
     end
 
 end
